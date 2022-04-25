@@ -1,4 +1,4 @@
-import Amp from "@components/amp/Amp";
+import Amp from "@/components/amp/Amp";
 import type { Component } from "solid-js";
 
 const App: Component = () => {

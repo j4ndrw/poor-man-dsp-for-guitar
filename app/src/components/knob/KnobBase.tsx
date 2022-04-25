@@ -1,6 +1,6 @@
-import { ellipse as ellipseClass } from "@utils/classes/knob/Ellipse";
+import { ellipse as ellipseClass } from "@/utils/classes/knob/Ellipse";
 import type { JSX, PropsWithChildren } from "solid-js";
-import type { KnobBaseProps } from "@interfaces/KnobBaseProps";
+import type { KnobBaseProps } from "@/interfaces/KnobBaseProps";
 
 function KnobBase(
     props: PropsWithChildren<KnobBaseProps & JSX.HTMLAttributes<HTMLDivElement>>

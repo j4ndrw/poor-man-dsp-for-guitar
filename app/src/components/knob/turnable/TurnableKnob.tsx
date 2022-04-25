@@ -6,10 +6,10 @@ import {
     onMount,
 } from "solid-js";
 import KnobBase from "../KnobBase";
-import type { KnobBaseProps } from "@interfaces/KnobBaseProps";
+import type { KnobBaseProps } from "@/interfaces/KnobBaseProps";
 
 import "./TurnableKnob.styles.css";
-import { closest } from "@utils/closest";
+import { closest } from "@/utils/closest";
 
 const angles = {
     min: -135,

@@ -1,4 +1,4 @@
-import { ClickableKnob, TurnableKnob } from "@components/knob";
+import { ClickableKnob, TurnableKnob } from "@/components/knob";
 import { createMemo } from "solid-js";
 
 export const createAmp = createMemo(
@@ -102,15 +102,6 @@ export const createAmp = createMemo(
                     <ClickableKnob
                         disabled={disabled}
                         name="Distortion"
-                        onClick={() => {
-                            /* TODO: Implement this */
-                        }}
-                    />
-                ),
-                () => (
-                    <ClickableKnob
-                        disabled={disabled}
-                        name="Other"
                         onClick={() => {
                             /* TODO: Implement this */
                         }}

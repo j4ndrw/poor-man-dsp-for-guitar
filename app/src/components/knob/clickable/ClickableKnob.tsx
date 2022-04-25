@@ -1,6 +1,6 @@
 import KnobBase from "../KnobBase";
-import type { KnobBaseProps } from "@interfaces/KnobBaseProps";
-import { clickable as clickableClass } from "@utils/classes/knob/Clickable";
+import type { KnobBaseProps } from "@/interfaces/KnobBaseProps";
+import { clickable as clickableClass } from "@/utils/classes/knob/Clickable";
 
 interface Props extends KnobBaseProps {
     onClick?: (

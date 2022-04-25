@@ -1,4 +1,4 @@
-import { createAmp } from "@hooks/amp/createAmp";
+import { createAmp } from "@/hooks/amp/createAmp";
 import { For } from "solid-js";
 
 interface Props {
