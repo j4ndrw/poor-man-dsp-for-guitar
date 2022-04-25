@@ -1,7 +1,7 @@
 #turnableKnob::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 8px;
+    width: 4px;
     height: 24px;
     background: #fff;
     cursor: pointer;
@@ -10,7 +10,7 @@
 #turnableKnob::-moz-range-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 8px;
+    width: 4px;
     height: 24px;
     background: #fff;
     cursor: pointer;

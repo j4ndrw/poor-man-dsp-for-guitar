@@ -1,4 +1,3 @@
-import { ellipse as ellipseClass } from "@utils/classes/knob/Ellipse";
 import KnobBase from "../KnobBase";
 import type { KnobBaseProps } from "@interfaces/KnobBaseProps";
 import { clickable as clickableClass } from "@utils/classes/knob/Clickable";
@@ -17,12 +16,12 @@ function ClickableKnob(props: Props) {
 
     return (
         <KnobBase
-            class={clickableClass}
             name={name}
             disabled={disabled}
             onClick={disabled ? () => {} : onClick}
-            knobType="clickable"
-        />
+        >
+            <div class={clickableClass} />
+        </KnobBase>
     );
 }
 
