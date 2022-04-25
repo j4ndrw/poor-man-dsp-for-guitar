@@ -6,7 +6,7 @@ const App: Component = () => {
     return (
         <div class="flex flex-col justify-center items-center">
             <h1 class="m-16 text-6xl select-none">Poor Man's DSP</h1>
-            <Amp disabled />
+            <Amp />
         </div>
     );
 };

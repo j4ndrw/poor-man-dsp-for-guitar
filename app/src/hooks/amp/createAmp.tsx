@@ -11,6 +11,20 @@ export const createAmp = createMemo(
                         name="Transpose"
                         min={-12}
                         max={12}
+                        defaultKnobPosition="middle"
+                        onTurn={() => {
+                            /* TODO: Implement this */
+                        }}
+                    />
+                ),
+                () => (
+                    <TurnableKnob
+                        disabled={disabled}
+                        name="Volume"
+                        min={0}
+                        max={100}
+                        defaultKnobPosition="middle"
+                        defaultValue={50}
                         onTurn={() => {
                             /* TODO: Implement this */
                         }}
@@ -33,6 +47,8 @@ export const createAmp = createMemo(
                         name="Low"
                         min={0}
                         max={100}
+                        defaultKnobPosition="middle"
+                        defaultValue={50}
                         onTurn={() => {
                             /* TODO: Implement this */
                         }}
@@ -44,6 +60,8 @@ export const createAmp = createMemo(
                         name="Mid"
                         min={0}
                         max={100}
+                        defaultKnobPosition="middle"
+                        defaultValue={50}
                         onTurn={() => {
                             /* TODO: Implement this */
                         }}
@@ -55,6 +73,8 @@ export const createAmp = createMemo(
                         name="High"
                         min={0}
                         max={100}
+                        defaultKnobPosition="middle"
+                        defaultValue={50}
                         onTurn={() => {
                             /* TODO: Implement this */
                         }}

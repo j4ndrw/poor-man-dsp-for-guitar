@@ -3,6 +3,7 @@ import {
     createSignal,
     createEffect,
     createRenderEffect,
+    onMount,
 } from "solid-js";
 import KnobBase from "../KnobBase";
 import type { KnobBaseProps } from "@interfaces/KnobBaseProps";
@@ -15,48 +16,91 @@ const angles = {
     max: 135,
 };
 
+interface Boundaries {
+    upper: number;
+    lower: number;
+}
 interface Props extends KnobBaseProps {
     min: number;
     max: number;
+    defaultValue?: number;
+    defaultKnobPosition?: "start" | "middle";
     onTurn: (currentValue: number) => void;
 }
 
 function TurnableKnob(props: Props) {
     let knobIndicatorRef: HTMLDivElement;
+    let knobRef: HTMLDivElement;
 
-    const { min, max, name, onTurn, disabled } = props;
+    const {
+        min,
+        max,
+        defaultValue = 0,
+        defaultKnobPosition = "start",
+        name,
+        onTurn,
+        disabled,
+    } = props;
 
-    const [currentValue, setCurrentValue] = createSignal<number>(0);
+    const [currentValue, setCurrentValue] = createSignal<number>(defaultValue);
     const [currentKnobIndicatorAngle, setCurrentKnobIndicatorAngle] =
         createSignal<number>(0);
 
     const numSteps = createMemo(() => Math.abs(min) + max);
     const angleStep = createMemo(() => (angles.max - angles.min) / numSteps());
+
     const positionStep = createMemo(
-        () => (clientBoundaries: { upper: number; lower: number }) =>
+        () => (clientBoundaries: Boundaries) =>
             (clientBoundaries.upper - clientBoundaries.lower) / numSteps()
     );
 
-    const possibilities = createMemo(
-        () => (clientBoundaries: { upper: number; lower: number }) => {
-            const possibleAngles = [];
-            const possiblePositions = [];
-            const possibleValues = [];
+    const possibilities = createMemo(() => (clientBoundaries: Boundaries) => {
+        const possibleAngles = [];
+        const possiblePositions = [];
+        const possibleValues = [];
 
-            const positionStepToCompute = positionStep();
+        const positionStepToCompute = positionStep();
 
-            for (let i = 0; i < numSteps() + 1; i++) {
-                possibleAngles.push(angles.min + i * angleStep());
-                possiblePositions.push(
-                    clientBoundaries.lower +
-                        i * positionStepToCompute(clientBoundaries)
-                );
-                possibleValues.push(min + i);
-            }
-
-            return { possibleAngles, possiblePositions, possibleValues };
+        for (let i = 0; i < numSteps() + 1; i++) {
+            possibleAngles.push(angles.min + i * angleStep());
+            possiblePositions.push(
+                clientBoundaries.lower +
+                    i * positionStepToCompute(clientBoundaries)
+            );
+            possibleValues.push(min + i);
         }
-    );
+
+        return { possibleAngles, possiblePositions, possibleValues };
+    });
+
+    const turnKnob = ({
+        knobPosition,
+        boundaries,
+    }: {
+        knobPosition: number;
+        boundaries: Boundaries;
+    }) => {
+        if (knobPosition === 0) return;
+        const { lower, upper } = boundaries;
+
+        const possibilitiesToCompute = possibilities();
+        const { possiblePositions, possibleAngles, possibleValues } =
+            possibilitiesToCompute({ lower, upper });
+
+        const { diff: closestPosition, index: closestPositionIndex } = closest({
+            from: possiblePositions,
+            target: knobPosition,
+        });
+
+        const newAngle = possibleAngles[closestPositionIndex];
+
+        if (currentValue() !== possibleValues[closestPositionIndex]) {
+            const newValue = possibleValues[closestPositionIndex];
+            if (newValue) setCurrentValue(newValue);
+        }
+
+        if (newAngle) setCurrentKnobIndicatorAngle(newAngle);
+    };
 
     const dragHandler = (
         event: DragEvent & {
@@ -72,23 +116,10 @@ function TurnableKnob(props: Props) {
         const { left: lower, right: upper } =
             event.target.getBoundingClientRect();
 
-        const possibilitiesToCompute = possibilities();
-        const { possiblePositions, possibleAngles, possibleValues } =
-            possibilitiesToCompute({ lower, upper });
-
-        const { diff: closestPosition, index: closestPositionIndex } = closest({
-            from: possiblePositions,
-            target: currentPosition,
+        turnKnob({
+            knobPosition: currentPosition,
+            boundaries: { lower, upper },
         });
-
-        const newAngle = possibleAngles[closestPositionIndex];
-
-        if (currentValue() !== possibleValues[closestPositionIndex]) {
-            const newValue = possibleValues[closestPositionIndex];
-            if (newValue) setCurrentValue(newValue);
-        }
-
-        if (newAngle) setCurrentKnobIndicatorAngle(newAngle);
     };
 
     createEffect(() => {
@@ -99,6 +130,19 @@ function TurnableKnob(props: Props) {
         if (knobIndicatorRef)
             knobIndicatorRef.style.transform = `rotate(${currentKnobIndicatorAngle()}deg)`;
     });
+    onMount(() => {
+        if (knobRef) {
+            const { left: lower, right: upper } =
+                knobRef.getBoundingClientRect();
+
+            const knobPosition = (() => {
+                if (defaultKnobPosition === "start") return lower;
+                return (lower + upper) / 2;
+            })();
+
+            turnKnob({ knobPosition, boundaries: { lower, upper } });
+        }
+    });
 
     if (min >= max)
         throw new Error(
@@ -108,6 +152,7 @@ function TurnableKnob(props: Props) {
     return (
         <KnobBase
             id="turnableKnob"
+            ref={(element) => (knobRef = element)}
             name={name}
             disabled={disabled}
             class={`relative ${disabled ? "pointer-events-none" : ""}`}
