@@ -1,3 +1,39 @@
+@import url("https://fonts.googleapis.com/css2?family=Mukta:wght@500&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer custom-layer {
+    .flower-pattern {
+        @apply absolute
+            grayscale-[100%] 
+            top-0 
+            right-0 
+            bottom-0 
+            left-0 
+            opacity-[0.02] 
+            pointer-events-none
+            bg-[url("assets/Flowers.jpg")]
+            bg-cover
+            bg-center
+            bg-no-repeat;
+    }
+}
+
+body {
+    @apply box-border 
+        bg-slate-900 
+        text-white 
+        text-5xl 
+        w-screen
+        h-screen
+        p-8
+        flex flex-col items-center;
+    font-family: "Mukta", sans-serif;
+}
+
+body::before {
+    content: "";
+    @apply flower-pattern;
+}

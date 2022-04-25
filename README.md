@@ -29,3 +29,7 @@ The app's UI will have to be really performant, such that the client's resources
 -   SolidJS
 -   Tailwind
 -   Vercel
+
+## Credit
+
+-   Background image (flower pattern) - Photo by Olya Kobruseva: https://www.pexels.com/photo/a-bouquet-of-flowers-with-green-leaves-5039360/
