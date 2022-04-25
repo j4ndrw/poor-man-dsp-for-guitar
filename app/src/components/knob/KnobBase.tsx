@@ -12,7 +12,7 @@ function KnobBase(
         : "hover:opacity-50 cursor-pointer";
 
     return (
-        <div class={`w-[15%] flex flex-col justify-center items-center px-16`}>
+        <div class={`w-[16%] flex flex-col justify-center items-center`}>
             <div
                 {...knobProps}
                 class={`${disabledClass} ${ellipseClass} flex justify-center items-center ${knobProps.class}`}

@@ -18,7 +18,6 @@ const angles = {
 interface Props extends KnobBaseProps {
     min: number;
     max: number;
-    step?: number;
     onTurn: (currentValue: number) => void;
 }
 
@@ -111,13 +110,13 @@ function TurnableKnob(props: Props) {
             id="turnableKnob"
             name={name}
             disabled={disabled}
-            class="relative"
+            class={`relative ${disabled ? "pointer-events-none" : ""}`}
             draggable
             onDragStart={(event) => {
                 event.dataTransfer?.setDragImage(new Image(), 10, 10);
             }}
             onDragEnd={(event) => event.stopImmediatePropagation()}
-            onDrag={dragHandler}
+            onDrag={disabled ? () => {} : dragHandler}
         >
             <div
                 ref={(element) => (knobIndicatorRef = element)}

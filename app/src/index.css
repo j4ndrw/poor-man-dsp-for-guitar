@@ -23,13 +23,14 @@
 
 body {
     @apply box-border 
-        bg-slate-900 
+        bg-neutral-900 
         text-white 
         text-2xl 
         w-screen
         h-screen
         p-8
-        flex flex-col items-center;
+        flex flex-col items-center
+        overflow-hidden;
     font-family: "Mukta", sans-serif;
 }
 
