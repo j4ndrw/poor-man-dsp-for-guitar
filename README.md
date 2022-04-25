@@ -23,3 +23,9 @@ Ideally, this should be a frontend only application that leverages the client's 
 For the moment, this is just an idea. I don't know if this will work as I want it to work.
 
 The app's UI will have to be really performant, such that the client's resources are not wasted on rendering and are available for DSP operations. As such, I think I'll build the frontend with SolidJS. We'll see if it is a good decision or if I'll end up regretting it.
+
+## Stack
+
+-   SolidJS
+-   Tailwind
+-   Vercel
