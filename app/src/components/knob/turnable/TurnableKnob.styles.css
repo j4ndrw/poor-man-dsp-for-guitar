@@ -1,0 +1,22 @@
+#turnableKnob::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 24px;
+    background: #fff;
+    cursor: pointer;
+}
+
+#turnableKnob::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 24px;
+    background: #fff;
+    cursor: pointer;
+}
+
+#turnableKnob::-webkit-slider-runnable-track {
+    width: 100%;
+    pointer-events: all;
+}

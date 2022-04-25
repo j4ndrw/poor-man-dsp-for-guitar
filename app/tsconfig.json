@@ -17,7 +17,12 @@
             "@interfaces/*": ["interfaces/*"],
             "@types/*": ["types/*"],
             "@utils/*": ["utils/*"],
-            "@store/*": ["store/*"]
-        }
+            "@store/*": ["store/*"],
+            "@hooks/*": ["hooks/*"]
+        },
+        "noImplicitAny": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true
     }
 }
