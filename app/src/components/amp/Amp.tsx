@@ -11,14 +11,8 @@ function Amp(props: Props) {
     const ampKnobs = createAmp();
 
     return (
-        <div class="fixed bottom-4 left-[275px] right-[275px] border-8 py-4 w-auto border-white rounded-3xl flex justify-center items-center xl:flex-row">
-            <For each={ampKnobs({ disabled })}>
-                {(Knob) => (
-                    <div class="scale-90 px-4 transform translate-x-6">
-                        <Knob />
-                    </div>
-                )}
-            </For>
+        <div class="fixed bottom-4 min-w-full py-4 grid place-items-center xl:grid-cols-9 grid-cols-3">
+            <For each={ampKnobs({ disabled })}>{(Knob) => <Knob />}</For>
         </div>
     );
 }

@@ -1,10 +1,12 @@
-import type { Device } from "@/interfaces/Device";
 import { createStore } from "solid-js/store";
-import type { KnobName, AmpSetting } from "@/types/AmpSettings";
-import { Accessor } from "solid-js";
+import type { AmpSetting } from "@/types/AmpSettings";
+import { createSignal } from "solid-js";
+
+// No idea how to make solid-js/store work, so I'll use signals instead.
+// If you find a way to use the store, feel free to submit a pull request
+
 interface Store {
-    inputDevice: Device | null;
-    outputDevice: Device | null;
+    audioDevice: MediaStream | null;
     Transpose: AmpSetting<number>;
     Volume: AmpSetting<number>;
     Gain: AmpSetting<number>;
@@ -17,8 +19,7 @@ interface Store {
 }
 
 export const initialStoreState: Store = {
-    inputDevice: null,
-    outputDevice: null,
+    audioDevice: null,
     Transpose: { value: 0 },
     Volume: { value: 50 },
     Gain: { value: 0 },
@@ -30,21 +31,4 @@ export const initialStoreState: Store = {
     Distortion: { value: false },
 };
 
-export const [store, setStore] = createStore<Store>(initialStoreState);
-
-export const setInputDevice = ({ device }: { device: Device }) => {
-    setStore("inputDevice", () => device);
-};
-export const setOutputDevice = ({ device }: { device: Device }) => {
-    setStore("outputDevice", () => device);
-};
-
-export const setSettingValue = ({
-    knob,
-    value,
-}: {
-    knob: KnobName;
-    value: number | boolean;
-}) => {
-    setStore(knob, () => ({ value }));
-};
+export const [store, setStore] = createSignal<Store>(initialStoreState);

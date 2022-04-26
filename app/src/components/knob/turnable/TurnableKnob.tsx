@@ -1,12 +1,8 @@
-import {
-    createMemo,
-    createSignal,
-    createEffect,
-    createRenderEffect,
-    onMount,
-} from "solid-js";
+import { createMemo, createSignal, createEffect, onMount } from "solid-js";
 import KnobBase from "../KnobBase";
 import type { KnobBaseProps } from "@/interfaces/KnobBaseProps";
+
+import { store, setStore } from "@/store/store";
 
 import "./TurnableKnob.styles.css";
 import { closest } from "@/utils/closest";
@@ -23,7 +19,6 @@ interface Boundaries {
 interface Props extends KnobBaseProps {
     min: number;
     max: number;
-    defaultValue?: number;
     defaultKnobPosition?: "start" | "middle";
     onTurn: (currentValue: number) => void;
 }
@@ -35,14 +30,12 @@ function TurnableKnob(props: Props) {
     const {
         min,
         max,
-        defaultValue = 0,
         defaultKnobPosition = "start",
         name,
         onTurn,
         disabled,
     } = props;
 
-    const [currentValue, setCurrentValue] = createSignal<number>(defaultValue);
     const [currentKnobIndicatorAngle, setCurrentKnobIndicatorAngle] =
         createSignal<number>(0);
 
@@ -94,9 +87,16 @@ function TurnableKnob(props: Props) {
 
         const newAngle = possibleAngles[closestPositionIndex];
 
-        if (currentValue() !== possibleValues[closestPositionIndex]) {
+        if (
+            (store()[name].value as number) !==
+            possibleValues[closestPositionIndex]
+        ) {
             const newValue = possibleValues[closestPositionIndex];
-            if (newValue) setCurrentValue(newValue);
+            if (newValue)
+                setStore((state) => ({
+                    ...state,
+                    [name]: { value: newValue },
+                }));
         }
 
         if (newAngle) setCurrentKnobIndicatorAngle(newAngle);
@@ -123,7 +123,7 @@ function TurnableKnob(props: Props) {
     };
 
     createEffect(() => {
-        onTurn(currentValue());
+        onTurn(store()[name].value as number);
     });
 
     createEffect(() => {
