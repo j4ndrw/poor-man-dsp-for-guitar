@@ -6,14 +6,33 @@ import MicrophonePlayback from "@/components/audio/MicrophonePlayback";
 
 const App: Component = () => {
     onMount(() => {
-        navigator.mediaDevices
-            .getUserMedia({ audio: true })
-            .then((audioDevice) => {
-                setStore((state) => ({
-                    ...state,
-                    audioDevice,
-                }));
-            });
+        navigator.mediaDevices.getUserMedia =
+            navigator.mediaDevices.getUserMedia ||
+            // @ts-ignore
+            navigator.mediaDevices.webkitGetUserMedia ||
+            // @ts-ignore
+            navigator.mediaDevices.mozGetUserMedia ||
+            // @ts-ignore
+            navigator.mediaDevices.msGetUserMedia;
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+            window.AudioContext =
+                // @ts-ignore
+                window.AudioContext || window.webkitAudioContext;
+
+            const audioContext = new window.AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            analyser.connect(audioContext.destination);
+            setStore((state) => ({
+                ...state,
+                audio: {
+                    analyser,
+                    context: audioContext,
+                    microphone,
+                },
+            }));
+        });
     });
 
     return (
@@ -29,7 +48,7 @@ const App: Component = () => {
                     </h1>
                 }
             >
-                <Match when={store().audioDevice !== null}>
+                <Match when={store().audio !== null}>
                     <MicrophonePlayback />
                     <Amp />
                     <Status />

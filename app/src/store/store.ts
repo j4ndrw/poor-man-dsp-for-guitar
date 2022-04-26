@@ -1,12 +1,13 @@
 import { createStore } from "solid-js/store";
 import type { AmpSetting } from "@/types/AmpSettings";
 import { createSignal } from "solid-js";
+import { IAudioAPI } from "@/interfaces/IAudioAPI";
 
 // No idea how to make solid-js/store work, so I'll use signals instead.
 // If you find a way to use the store, feel free to submit a pull request
 
 interface Store {
-    audioDevice: MediaStream | null;
+    audio: IAudioAPI | null;
     Transpose: AmpSetting<number>;
     Volume: AmpSetting<number>;
     Gain: AmpSetting<number>;
@@ -19,7 +20,7 @@ interface Store {
 }
 
 export const initialStoreState: Store = {
-    audioDevice: null,
+    audio: null,
     Transpose: { value: 0 },
     Volume: { value: 50 },
     Gain: { value: 0 },
