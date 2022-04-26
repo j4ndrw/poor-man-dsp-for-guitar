@@ -21,7 +21,6 @@
             "@/hooks/*": ["hooks/*"]
         },
         "noImplicitAny": true,
-        "noUncheckedIndexedAccess": true,
         "noImplicitReturns": true,
         "noImplicitThis": true
     }

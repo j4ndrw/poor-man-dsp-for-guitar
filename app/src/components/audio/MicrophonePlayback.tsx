@@ -1,6 +1,7 @@
 // Credit: https://github.com/cleandersonlobo/react-mic/blob/master/src/libs/AudioContext.js
 
 import { store } from "@/store/store";
+import { Sampler } from "@/utils/dsp/sampler";
 import { createEffect, createSignal, onMount } from "solid-js";
 
 function MicrophonePlayback() {
