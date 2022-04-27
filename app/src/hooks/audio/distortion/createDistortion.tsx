@@ -16,7 +16,7 @@ const makeDistortionCurve = (amount: number) => {
     return curve;
 };
 
-function createDistortion() {
+function createDistortion({ masterNode }: { masterNode: AudioNode }) {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
@@ -35,8 +35,11 @@ function createDistortion() {
             return;
         }
 
-        // Connect microphone to distortion gain node
-        microphone().connect(distortionGainNode);
+        // Connect microphone to master node
+        microphone().connect(masterNode);
+
+        // Connect master node to distortion gain node
+        masterNode.connect(distortionGainNode);
 
         // Connect distortion gain node to distortion wave shaper node
         distortionGainNode.connect(distortionWaveShaperNode);

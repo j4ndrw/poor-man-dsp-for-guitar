@@ -6,7 +6,13 @@ import { createEffect, createMemo, onMount } from "solid-js";
 //      https://stackoverflow.com/questions/29110380/web-audio-api-setting-treble-and-bass
 //      https://github.com/cwilso/wubwubwub/blob/MixTrack/js/tracks.js#L189-L207
 
-function createEqualizer(...otherNodes: AudioNode[]) {
+function createEqualizer({
+    masterNode,
+    otherNodes,
+}: {
+    masterNode: AudioNode;
+    otherNodes: AudioNode[];
+}) {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
@@ -22,8 +28,8 @@ function createEqualizer(...otherNodes: AudioNode[]) {
         microphone().connect(highsFilter);
         microphone().connect(filterGain);
 
-        // Connect the other nodes to the filters
-        otherNodes.forEach((node) => {
+        // Connect the master node and the other nodes to the filters
+        [masterNode, ...otherNodes].forEach((node) => {
             node.connect(lowsFilter);
             node.connect(midsFilter);
             node.connect(highsFilter);

@@ -11,10 +11,10 @@ const hanningWindow = (length: number) => {
 const linearInterpolation = (a: number, b: number, t: number) =>
     a + (b - a) * t;
 
-const grainSize = 256;
+const grainSize = 1024;
 
 // Credit: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js
-function createChorus() {
+function createChorus({ masterNode }: { masterNode: AudioNode }) {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
@@ -31,7 +31,8 @@ function createChorus() {
             chorusNode.disconnect();
             return;
         }
-        microphone().connect(chorusNode);
+        microphone().connect(masterNode);
+        masterNode.connect(chorusNode);
         chorusNode.connect(audioContext().destination);
     });
 
@@ -44,8 +45,8 @@ function createChorus() {
         const buffer = new Float32Array(grainSize * 2);
         const grainWindow = hanningWindow(grainSize);
 
-        const pitchRatio = 2;
-        const overlapRatio = 0.1;
+        const pitchRatio = 8;
+        const overlapRatio = 2;
 
         if (!chorusNode.onaudioprocess)
             chorusNode.onaudioprocess = (event) => {

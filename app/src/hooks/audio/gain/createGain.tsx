@@ -1,15 +1,18 @@
 import { store } from "@/store/store";
 import { createEffect, createMemo, onMount } from "solid-js";
 
-function createGain() {
+function createGain({ masterNode }: { masterNode: AudioNode }) {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
     const gainNode = audioContext().createGain();
 
     onMount(() => {
-        // Connect microphone to gain node
-        microphone().connect(gainNode);
+        // Connect microphone to the master node
+        microphone().connect(masterNode);
+
+        // Connect the master node to the gain node
+        masterNode.connect(gainNode);
 
         // Connect gain node to main audio context
         gainNode.connect(audioContext().destination);
