@@ -40,7 +40,7 @@ const App: Component = () => {
                 }
             >
                 <Match when={store().audio !== null}>
-                    <div class="mt-36 flex flex-col justify-center items-center">
+                    <div class="scale-90 mt-36 flex flex-col justify-center items-center">
                         <h1 class="text-3xl">
                             NOTE: Before playing anything, start with your
                             speaker and microphone volumes really low.
