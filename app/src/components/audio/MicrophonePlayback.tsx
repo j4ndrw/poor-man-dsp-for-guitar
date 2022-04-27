@@ -30,7 +30,7 @@ function MicrophonePlayback() {
         // Credit: https://github.com/agiratech/picth-liveinput/blob/master/lib/pitchdetect.js
 
         if (!canvasRef) return;
-        analyser().fftSize = 128 * 128;
+        analyser().fftSize = 128;
 
         const bufferLength = analyser().frequencyBinCount;
 
