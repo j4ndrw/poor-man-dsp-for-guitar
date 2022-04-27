@@ -8,12 +8,11 @@ import { IAudioAPI } from "@/interfaces/IAudioAPI";
 
 interface Store {
     audio: IAudioAPI | null;
-    Transpose: AmpSetting<number>;
-    Volume: AmpSetting<number>;
     Gain: AmpSetting<number>;
     Low: AmpSetting<number>;
     Mid: AmpSetting<number>;
     High: AmpSetting<number>;
+    Chorus: AmpSetting<boolean>;
     Delay: AmpSetting<boolean>;
     Reverb: AmpSetting<boolean>;
     Distortion: AmpSetting<boolean>;
@@ -21,12 +20,11 @@ interface Store {
 
 export const initialStoreState: Store = {
     audio: null,
-    Transpose: { value: 0 },
-    Volume: { value: 50 },
     Gain: { value: 0 },
     Low: { value: 50 },
     Mid: { value: 50 },
     High: { value: 50 },
+    Chorus: { value: false },
     Delay: { value: false },
     Reverb: { value: false },
     Distortion: { value: false },

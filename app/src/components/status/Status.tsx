@@ -15,11 +15,7 @@ function Status() {
                                     ? store()[effect].value
                                         ? "On"
                                         : "Off"
-                                    : `${store()[effect].value} ${
-                                          effect === "Transpose"
-                                              ? "semitones"
-                                              : "%"
-                                      }`}
+                                    : `${store()[effect].value}%`}
                             </p>
                         </div>
                     );

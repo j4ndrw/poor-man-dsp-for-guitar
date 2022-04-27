@@ -8,7 +8,6 @@ Guitar amp simulators and VSTs are expensive. As such, I want to create an open 
 -   [ ] Distortion
 -   [ ] Delay
 -   [ ] Reverb
--   [ ] Volume
 -   [ ] Chorus
 -   [ ] Other interesting effects
 

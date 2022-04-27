@@ -1,11 +1,13 @@
-import createGain from "@/hooks/audio/createGain";
-import createTransposition from "@/hooks/audio/createTransposition";
+import createGain from "@/hooks/audio/gain/createGain";
+import createChorus from "@/hooks/audio/chorus/createChorus";
 
 function MicrophonePlayback() {
-    createGain();
-    createTransposition();
+    let canvasRef: HTMLCanvasElement;
 
-    return <></>;
+    createGain();
+    createChorus();
+
+    return <canvas ref={(element) => (canvasRef = element)} />;
 }
 
 export default MicrophonePlayback;

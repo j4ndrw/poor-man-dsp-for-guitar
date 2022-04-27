@@ -1,10 +1,9 @@
 export const effectNames = [
-    "Transpose",
-    "Volume",
     "Gain",
     "Low",
     "Mid",
     "High",
+    "Chorus",
     "Delay",
     "Reverb",
     "Distortion",

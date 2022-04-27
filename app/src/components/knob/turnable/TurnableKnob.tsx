@@ -95,11 +95,11 @@ function TurnableKnob(props: Props) {
             if (newValue)
                 setStore((state) => ({
                     ...state,
-                    [name]: { value: newValue },
+                    [name]: { value: Math.floor(newValue) },
                 }));
         }
 
-        if (newAngle) setCurrentKnobIndicatorAngle(newAngle);
+        if (newAngle) setCurrentKnobIndicatorAngle(Math.floor(newAngle));
     };
 
     const dragHandler = (
