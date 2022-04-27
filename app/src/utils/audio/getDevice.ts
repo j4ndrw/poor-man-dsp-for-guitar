@@ -7,5 +7,11 @@ export const getDevice = () => {
         navigator.mediaDevices.mozGetUserMedia ||
         // @ts-ignore
         navigator.mediaDevices.msGetUserMedia;
-    return navigator.mediaDevices.getUserMedia({ audio: true });
+    return navigator.mediaDevices.getUserMedia({
+        audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false,
+        },
+    });
 };
