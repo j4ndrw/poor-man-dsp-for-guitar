@@ -13,7 +13,7 @@ const linearInterpolation = (a: number, b: number, t: number) =>
 
 const grainSize = 256;
 
-// Credit: https://github.com/cwilso/Audio-Input-Effects
+// Credit: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js
 function createChorus() {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
