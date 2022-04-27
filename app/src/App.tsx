@@ -40,6 +40,21 @@ const App: Component = () => {
                 }
             >
                 <Match when={store().audio !== null}>
+                    <div class="mt-36 flex flex-col justify-center items-center">
+                        <h1 class="text-3xl">
+                            NOTE: Before playing anything, start with your
+                            speaker and microphone volumes really low.
+                        </h1>
+                        <h2 class="text-2xl">
+                            The amp is quite powerful and you could damage your
+                            hearing if you're not careful.
+                        </h2>
+                        <h3 class="text-lg mt-12">
+                            I'm still working on setting the volume a bit lower,
+                            but the Web Audio API is a bit tricky. I will fix
+                            this in the next updates.
+                        </h3>
+                    </div>
                     <MicrophonePlayback />
                     <Amp />
                     <Status />
