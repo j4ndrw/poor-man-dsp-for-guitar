@@ -4,11 +4,13 @@ import { createEffect, createMemo, onMount } from "solid-js";
 // Credit:
 //      https://stackoverflow.com/questions/30065093/web-audio-api-equalizer
 //      https://stackoverflow.com/questions/29110380/web-audio-api-setting-treble-and-bass
+//      https://github.com/cwilso/wubwubwub/blob/MixTrack/js/tracks.js#L189-L207
 
 function createEqualizer(...otherNodes: AudioNode[]) {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
+    const filterGain = audioContext().createBiquadFilter();
     const lowsFilter = audioContext().createBiquadFilter();
     const midsFilter = audioContext().createBiquadFilter();
     const highsFilter = audioContext().createBiquadFilter();
@@ -18,6 +20,7 @@ function createEqualizer(...otherNodes: AudioNode[]) {
         microphone().connect(lowsFilter);
         microphone().connect(midsFilter);
         microphone().connect(highsFilter);
+        microphone().connect(filterGain);
 
         // Connect the other nodes to the filters
         otherNodes.forEach((node) => {
@@ -30,6 +33,11 @@ function createEqualizer(...otherNodes: AudioNode[]) {
         lowsFilter.connect(audioContext().destination);
         midsFilter.connect(audioContext().destination);
         highsFilter.connect(audioContext().destination);
+
+        // Chain the filters:
+        highsFilter.connect(midsFilter);
+        midsFilter.connect(lowsFilter);
+        lowsFilter.connect(filterGain);
     });
 
     createEffect(() => {
@@ -37,13 +45,17 @@ function createEqualizer(...otherNodes: AudioNode[]) {
         midsFilter.type = "peaking";
         highsFilter.type = "highshelf";
 
-        lowsFilter.frequency.value = 400 + store().Low.value;
-        midsFilter.frequency.value = 2200 + store().Mid.value;
-        highsFilter.frequency.value = 4000 + store().High.value;
+        lowsFilter.frequency.value = 320.0 + store().Low.value;
+        midsFilter.frequency.value = 1000.0 + store().Mid.value;
+        highsFilter.frequency.value = 3200.0 + store().High.value;
 
-        lowsFilter.gain.value = (store().Low.value - 50) / 2;
-        midsFilter.gain.value = (store().Mid.value - 50) / 1.5;
-        highsFilter.gain.value = (store().High.value - 50) / 1.3;
+        midsFilter.Q.value = 0.5;
+
+        lowsFilter.gain.value = store().Low.value - 50;
+        midsFilter.gain.value = store().Mid.value - 50;
+        highsFilter.gain.value = store().High.value - 50;
+
+        filterGain.gain.value = 0.5;
     });
 }
 

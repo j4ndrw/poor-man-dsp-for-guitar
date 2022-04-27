@@ -44,8 +44,8 @@ function createChorus() {
         const buffer = new Float32Array(grainSize * 2);
         const grainWindow = hanningWindow(grainSize);
 
-        const pitchRatio = 1;
-        const overlapRatio = 0.5;
+        const pitchRatio = 2;
+        const overlapRatio = 0.1;
 
         if (!chorusNode.onaudioprocess)
             chorusNode.onaudioprocess = (event) => {

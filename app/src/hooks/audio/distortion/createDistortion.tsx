@@ -55,7 +55,7 @@ function createDistortion() {
             distortionWaveShaperNode.curve = null;
             return;
         }
-        distortionWaveShaperNode.curve = makeDistortionCurve(50);
+        distortionWaveShaperNode.curve = makeDistortionCurve(25);
     });
 
     return { distortionWaveShaperNode, distortionGainNode };

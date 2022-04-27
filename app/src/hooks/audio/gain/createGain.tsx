@@ -18,7 +18,7 @@ function createGain() {
     createEffect(() => {
         // Credit: https://stackoverflow.com/questions/33129754/volume-control-with-web-audio-api
         if (store().Chorus.value) gainNode.gain.value = 0;
-        else gainNode.gain.value = store().Gain.value / 12;
+        else gainNode.gain.value = (store().Gain.value * 2) / 100;
     });
 
     return { gainNode };
