@@ -20,7 +20,6 @@ function createDistortion() {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
-    const audioGainNode = audioContext().createGain();
     const distortionGainNode = audioContext().createGain();
     const distortionWaveShaperNode = audioContext().createWaveShaper();
 
@@ -28,18 +27,16 @@ function createDistortion() {
 
     createEffect(() => {
         if (!shouldDistort()) {
-            audioGainNode.disconnect();
             distortionGainNode.disconnect();
             distortionWaveShaperNode.disconnect();
             microphone()
                 .mediaStream.getAudioTracks()[0]
                 .getConstraints().noiseSuppression = false;
+            return;
         }
-        // Connect microphone to gain node
-        microphone().connect(audioGainNode);
 
-        // Connect audio gain node to distortion gain node
-        audioGainNode.connect(distortionGainNode);
+        // Connect microphone to distortion gain node
+        microphone().connect(distortionGainNode);
 
         // Connect distortion gain node to distortion wave shaper node
         distortionGainNode.connect(distortionWaveShaperNode);
@@ -60,6 +57,8 @@ function createDistortion() {
         }
         distortionWaveShaperNode.curve = makeDistortionCurve(50);
     });
+
+    return { distortionWaveShaperNode, distortionGainNode };
 }
 
 export default createDistortion;

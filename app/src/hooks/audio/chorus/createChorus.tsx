@@ -20,7 +20,7 @@ function createChorus() {
 
     const chorus = createMemo(() => store().Chorus.value);
 
-    const chorusProcessor = microphone().context.createScriptProcessor(
+    const chorusNode = microphone().context.createScriptProcessor(
         grainSize,
         1,
         1
@@ -28,16 +28,16 @@ function createChorus() {
 
     createEffect(() => {
         if (!chorus()) {
-            chorusProcessor.disconnect();
+            chorusNode.disconnect();
             return;
         }
-        microphone().connect(chorusProcessor);
-        chorusProcessor.connect(audioContext().destination);
+        microphone().connect(chorusNode);
+        chorusNode.connect(audioContext().destination);
     });
 
     createEffect(() => {
         if (!chorus()) {
-            chorusProcessor.onaudioprocess = null;
+            chorusNode.onaudioprocess = null;
             return;
         }
 
@@ -47,8 +47,8 @@ function createChorus() {
         const pitchRatio = 1;
         const overlapRatio = 0.5;
 
-        if (!chorusProcessor.onaudioprocess)
-            chorusProcessor.onaudioprocess = (event) => {
+        if (!chorusNode.onaudioprocess)
+            chorusNode.onaudioprocess = (event) => {
                 let inputData = event.inputBuffer.getChannelData(0);
                 let outputData = event.outputBuffer.getChannelData(0);
 
@@ -94,6 +94,7 @@ function createChorus() {
                 );
             };
     });
+    return { chorusNode };
 }
 
 export default createChorus;

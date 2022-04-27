@@ -20,6 +20,8 @@ function createGain() {
         if (store().Chorus.value) gainNode.gain.value = 0;
         else gainNode.gain.value = store().Gain.value / 12;
     });
+
+    return { gainNode };
 }
 
 export default createGain;
