@@ -1,5 +1,4 @@
 import { store } from "@/store/store";
-import Reverb from "@logue/reverb";
 import { createEffect, createMemo, onMount } from "solid-js";
 
 // Credit:

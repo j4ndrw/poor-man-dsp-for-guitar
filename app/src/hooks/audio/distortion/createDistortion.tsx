@@ -23,16 +23,9 @@ function createDistortion() {
     const gainNode = createMemo(() => audioContext().createGain());
     const waveShaperNode = createMemo(() => audioContext().createWaveShaper());
 
-    const shouldDistort = createMemo(() => store().Distortion.value);
+    const distortion = createMemo(() => store().Distortion.value / 10);
 
     createEffect(() => {
-        if (!shouldDistort()) {
-            microphone()
-                .mediaStream.getAudioTracks()[0]
-                .getConstraints().noiseSuppression = false;
-            return;
-        }
-
         // Add noise gate
         microphone()
             .mediaStream.getAudioTracks()[0]
@@ -42,12 +35,12 @@ function createDistortion() {
     });
 
     createEffect(() => {
-        if (!shouldDistort()) {
+        if (distortion() === 0) {
             waveShaperNode().curve = null;
             gainNode().gain.value = 0;
             return;
         }
-        gainNode().gain.value = 10;
+        gainNode().gain.value = 2;
         waveShaperNode().curve = makeDistortionCurve(500);
     });
 

@@ -2,7 +2,7 @@ import { createMemo, createSignal, createEffect, onMount } from "solid-js";
 import KnobBase from "../KnobBase";
 import type { KnobBaseProps } from "@/interfaces/KnobBaseProps";
 
-import { store, setStore } from "@/store/store";
+import { store, setStore, initialStoreState } from "@/store/store";
 
 import "./TurnableKnob.styles.css";
 import { closest } from "@/utils/closest";
@@ -20,7 +20,7 @@ interface Props extends KnobBaseProps {
     min: number;
     max: number;
     defaultKnobPosition?: "start" | "middle";
-    onTurn: (currentValue: number) => void;
+    onTurn?: (currentValue: number) => void;
 }
 
 function TurnableKnob(props: Props) {
@@ -122,14 +122,6 @@ function TurnableKnob(props: Props) {
         });
     };
 
-    createEffect(() => {
-        onTurn(store()[name].value as number);
-    });
-
-    createEffect(() => {
-        if (knobIndicatorRef)
-            knobIndicatorRef.style.transform = `rotate(${currentKnobIndicatorAngle()}deg)`;
-    });
     onMount(() => {
         if (knobRef) {
             const { left: lower, right: upper } =
@@ -142,6 +134,29 @@ function TurnableKnob(props: Props) {
 
             turnKnob({ knobPosition, boundaries: { lower, upper } });
         }
+    });
+
+    createEffect(() => {
+        if (store()[name].value === initialStoreState[name].value && knobRef) {
+            const { left: lower, right: upper } =
+                knobRef.getBoundingClientRect();
+
+            const knobPosition = (() => {
+                if (defaultKnobPosition === "start") return lower;
+                return (lower + upper) / 2;
+            })();
+
+            turnKnob({ knobPosition, boundaries: { lower, upper } });
+        }
+    });
+
+    createEffect(() => {
+        if (onTurn) onTurn(store()[name].value as number);
+    });
+
+    createEffect(() => {
+        if (knobIndicatorRef)
+            knobIndicatorRef.style.transform = `rotate(${currentKnobIndicatorAngle()}deg)`;
     });
 
     if (min >= max)

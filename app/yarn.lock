@@ -296,11 +296,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@logue/reverb@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@logue/reverb/-/reverb-0.5.2.tgz#0ba0e96d8ce37f55a7f2c026bb4b1b1d0ad28294"
-  integrity sha512-7vdaBV83TkUpZ3TzN5lEpJXLiIIx2npfjh5O187zmdY7ECJGtL7LRNQwv+vi6xXeKq908WWGy3qdcspuO/kIVw==
-
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"

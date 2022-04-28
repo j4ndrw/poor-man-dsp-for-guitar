@@ -12,9 +12,6 @@ export const createAmp = createMemo(
                         name="Gain"
                         min={0}
                         max={100}
-                        onTurn={() => {
-                            /* TODO: Implement this */
-                        }}
                     />
                 ),
                 () => (
@@ -24,9 +21,6 @@ export const createAmp = createMemo(
                         min={0}
                         max={100}
                         defaultKnobPosition="middle"
-                        onTurn={() => {
-                            /* TODO: Implement this */
-                        }}
                     />
                 ),
                 () => (
@@ -36,9 +30,6 @@ export const createAmp = createMemo(
                         min={0}
                         max={100}
                         defaultKnobPosition="middle"
-                        onTurn={() => {
-                            /* TODO: Implement this */
-                        }}
                     />
                 ),
                 () => (
@@ -48,14 +39,18 @@ export const createAmp = createMemo(
                         min={0}
                         max={100}
                         defaultKnobPosition="middle"
-                        onTurn={() => {
-                            /* TODO: Implement this */
-                        }}
+                    />
+                ),
+                () => (
+                    <TurnableKnob
+                        disabled={disabled}
+                        name="Distortion"
+                        min={0}
+                        max={100}
                     />
                 ),
                 () => <ClickableKnob disabled={disabled} name="Chorus" />,
                 () => <ClickableKnob disabled={disabled} name="Delay" />,
                 () => <ClickableKnob disabled={disabled} name="Reverb" />,
-                () => <ClickableKnob disabled={disabled} name="Distortion" />,
             ]
 );

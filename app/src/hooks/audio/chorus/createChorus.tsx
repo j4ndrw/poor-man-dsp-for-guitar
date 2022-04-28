@@ -52,7 +52,7 @@ function createChorus() {
                     const a = inputData[index];
                     const b = inputData[(index + 1) % grainSize];
                     grainData[i] +=
-                        linearInterpolation(a, b, j % pitchRatio) *
+                        linearInterpolation(a, b, j % (440 * pitchRatio)) *
                         grainWindow[i];
                 }
 
@@ -75,7 +75,7 @@ function createChorus() {
                         grainWindow[i];
                 }
 
-                outputData.set(inputData.map((sample) => sample * 3));
+                outputData.set(inputData.map((sample) => sample * 5));
             };
     });
     return { chorusNode };

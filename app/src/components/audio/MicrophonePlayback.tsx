@@ -3,7 +3,7 @@ import createChorus from "@/hooks/audio/chorus/createChorus";
 import createDistortion from "@/hooks/audio/distortion/createDistortion";
 import createEqualizer from "@/hooks/audio/equalizer/createEqualizer";
 import { createEffect, createMemo, createSignal, onMount } from "solid-js";
-import { store } from "@/store/store";
+import { initialStoreState, setStore, store } from "@/store/store";
 import createReverb from "@/hooks/audio/reverb/createReverb";
 
 function MicrophonePlayback() {
@@ -143,15 +143,17 @@ function MicrophonePlayback() {
     });
 
     return (
-        <div
-            ref={(element) => (waveformDivRef = element)}
-            class="absolute bottom-32 left-1/2 transform -translate-x-1/2"
-        >
-            <canvas
-                ref={(element) => (canvasRef = element)}
-                width="2200px"
-                height="300px"
-            />
+        <div>
+            <div
+                ref={(element) => (waveformDivRef = element)}
+                class="absolute bottom-32 left-1/2 transform -translate-x-1/2"
+            >
+                <canvas
+                    ref={(element) => (canvasRef = element)}
+                    width="2200px"
+                    height="300px"
+                />
+            </div>
         </div>
     );
 }

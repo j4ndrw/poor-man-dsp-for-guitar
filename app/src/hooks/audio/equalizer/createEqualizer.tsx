@@ -16,9 +16,10 @@ function createEqualizer() {
     const highsFilter = createMemo(() => audioContext().createBiquadFilter());
 
     onMount(() => {
-        equalizerNode().connect(lowsFilter());
-        equalizerNode().connect(midsFilter());
-        equalizerNode().connect(highsFilter());
+        highsFilter().connect(midsFilter()).connect(lowsFilter());
+        microphone().connect(lowsFilter()).connect(equalizerNode());
+        microphone().connect(midsFilter()).connect(equalizerNode());
+        microphone().connect(highsFilter()).connect(equalizerNode());
     });
 
     createEffect(() => {
@@ -26,29 +27,17 @@ function createEqualizer() {
         midsFilter().type = "peaking";
         highsFilter().type = "highshelf";
 
-        lowsFilter().frequency.value = 200 * (store().Low.value / 100);
-        midsFilter().frequency.value = 2200 * (store().Mid.value / 100);
-        highsFilter().frequency.value = 4000 * (store().High.value / 100);
+        lowsFilter().frequency.value = 320 + store().Low.value;
+        midsFilter().frequency.value = 1000 + store().Mid.value;
+        highsFilter().frequency.value = 3200 + store().High.value;
 
-        midsFilter().Q.value = Math.SQRT1_2;
+        midsFilter().Q.value = 0.5;
 
-        lowsFilter().gain.setTargetAtTime(
-            store().Low.value / 10,
-            microphone().context.currentTime,
-            0.01
-        );
-        midsFilter().gain.setTargetAtTime(
-            store().Mid.value / 10,
-            microphone().context.currentTime,
-            0.01
-        );
-        highsFilter().gain.setTargetAtTime(
-            store().High.value / 10,
-            microphone().context.currentTime,
-            0.01
-        );
+        lowsFilter().gain.value = store().Low.value - 50;
+        midsFilter().gain.value = store().Mid.value - 50;
+        highsFilter().gain.value = store().High.value - 50;
 
-        equalizerNode().gain.value = 0.5;
+        equalizerNode().gain.value = 0.01 + store().Distortion.value / 50;
     });
     return { equalizerNode };
 }

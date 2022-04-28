@@ -12,10 +12,10 @@ interface Store {
     Low: AmpSetting<number>;
     Mid: AmpSetting<number>;
     High: AmpSetting<number>;
+    Distortion: AmpSetting<number>;
     Chorus: AmpSetting<boolean>;
     Delay: AmpSetting<boolean>;
     Reverb: AmpSetting<boolean>;
-    Distortion: AmpSetting<boolean>;
 }
 
 export const initialStoreState: Store = {
@@ -24,10 +24,10 @@ export const initialStoreState: Store = {
     Low: { value: 50 },
     Mid: { value: 50 },
     High: { value: 50 },
+    Distortion: { value: 0 },
     Chorus: { value: false },
     Delay: { value: false },
     Reverb: { value: false },
-    Distortion: { value: false },
 };
 
 export const [store, setStore] = createSignal<Store>(initialStoreState);
