@@ -1,27 +1,20 @@
 import { store } from "@/store/store";
-import { createEffect, createMemo, onMount } from "solid-js";
+import { Accessor, createEffect, createMemo, onMount } from "solid-js";
 
-function createGain({ masterNode }: { masterNode: AudioNode }) {
+function createGain() {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
-    const gainNode = audioContext().createGain();
-
-    onMount(() => {
-        // Connect microphone to the master node
-        microphone().connect(masterNode);
-
-        // Connect the master node to the gain node
-        masterNode.connect(gainNode);
-
-        // Connect gain node to main audio context
-        gainNode.connect(audioContext().destination);
-    });
+    const gainNode = createMemo(() => audioContext().createGain());
 
     createEffect(() => {
         // Credit: https://stackoverflow.com/questions/33129754/volume-control-with-web-audio-api
-        if (store().Chorus.value) gainNode.gain.value = 0;
-        else gainNode.gain.value = (store().Gain.value * 2) / 100;
+
+        gainNode().gain.setTargetAtTime(
+            (store().Gain.value / 100) * 2,
+            microphone().context.currentTime,
+            0.01
+        );
     });
 
     return { gainNode };

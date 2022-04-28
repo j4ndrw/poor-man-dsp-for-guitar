@@ -29,6 +29,13 @@ The app's UI will have to be really performant, such that the client's resources
 -   Tailwind
 -   Vercel
 
+## Ideas
+
+-   Mute mic button / on key press
+-   Default presets button
+-   Reset knob to default on middle click
+-   Store knob state in local storage
+
 ## Credit
 
 -   Background image (flower pattern) - Photo by Olya Kobruseva: https://www.pexels.com/photo/a-bouquet-of-flowers-with-green-leaves-5039360/

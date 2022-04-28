@@ -4,35 +4,76 @@ import createDistortion from "@/hooks/audio/distortion/createDistortion";
 import createEqualizer from "@/hooks/audio/equalizer/createEqualizer";
 import { createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { store } from "@/store/store";
+import createReverb from "@/hooks/audio/reverb/createReverb";
 
 function MicrophonePlayback() {
     let canvasRef: HTMLCanvasElement;
     let waveformDivRef: HTMLDivElement;
 
-    const masterNode = store().audio!.context.createGain();
-    const analyser = createMemo(() => store().audio!.analyser);
-    const { gainNode } = createGain({ masterNode });
-    const { chorusNode } = createChorus({ masterNode });
-    const { distortionWaveShaperNode } = createDistortion({ masterNode });
-    createEqualizer({
-        masterNode,
-        otherNodes: [gainNode, chorusNode, distortionWaveShaperNode],
-    });
+    const audioContext = createMemo(() => store().audio!.context);
+    const microphone = createMemo(() => store().audio!.microphone);
+    const analyserNode = createMemo(() => store().audio!.analyser);
+    const masterNode = createMemo(() => store().audio!.context.createGain());
+
+    const { gainNode } = createGain();
+    const { chorusNode } = createChorus();
+    const { distortionNode } = createDistortion();
+    // createReverb();
+
+    const { equalizerNode } = createEqualizer();
 
     const [waveData, setWaveData] = createSignal<Uint8Array>();
     const [drawingStarted, setDrawingStarted] = createSignal<boolean>(false);
 
-    onMount(() => {
-        analyser().connect(masterNode);
+    const connectNodes = ({
+        from,
+        to,
+    }: {
+        from: AudioNode;
+        to: AudioNode[];
+    }) => {
+        to.forEach((node) => {
+            from.connect(node).connect(audioContext().destination);
+        });
+    };
+
+    onMount(async () => {
+        if (audioContext().state === "suspended") {
+            await audioContext().resume();
+        }
+
+        // Connect microphone to analyser and the the master node
+        connectNodes({
+            from: microphone(),
+            to: [analyserNode(), masterNode()],
+        });
+
+        // Connect the analyse to the master node
+        connectNodes({
+            from: analyserNode(),
+            to: [masterNode()],
+        });
+
+        // Connect the master node to all the effects
+        connectNodes({
+            from: masterNode(),
+            to: [gainNode(), chorusNode(), distortionNode(), equalizerNode()],
+        });
+
+        // Connect the gain node to the other effects
+        connectNodes({
+            from: gainNode(),
+            to: [chorusNode(), distortionNode(), equalizerNode()],
+        });
     });
 
     createEffect(() => {
         // Credit: https://github.com/agiratech/picth-liveinput/blob/master/lib/pitchdetect.js
 
         if (!canvasRef) return;
-        analyser().fftSize = 128;
+        analyserNode().fftSize = 128;
 
-        const bufferLength = analyser().frequencyBinCount;
+        const bufferLength = analyserNode().frequencyBinCount;
 
         const dataArray = new Uint8Array(bufferLength);
         setWaveData(dataArray);
@@ -59,7 +100,7 @@ function MicrophonePlayback() {
         const drawFunc = () => {
             requestAnimationFrame(drawFunc);
 
-            analyser().getByteTimeDomainData(waveData()!);
+            analyserNode().getByteTimeDomainData(waveData()!);
 
             canvasContext.clearRect(
                 0,
@@ -73,9 +114,9 @@ function MicrophonePlayback() {
             canvasContext.beginPath();
 
             let sliceWidth =
-                waveformDivRef.clientWidth / analyser().frequencyBinCount;
+                waveformDivRef.clientWidth / analyserNode().frequencyBinCount;
             let x = 0;
-            for (let i = 0; i < analyser().frequencyBinCount; i++) {
+            for (let i = 0; i < analyserNode().frequencyBinCount; i++) {
                 let v = waveData()![i] / 128.0;
                 let y = (v * waveformDivRef.clientHeight) / 2;
 

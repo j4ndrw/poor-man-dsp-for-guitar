@@ -12,6 +12,7 @@ export const getDevice = () => {
             echoCancellation: false,
             noiseSuppression: false,
             autoGainControl: false,
+            latency: 0.005,
         },
     });
 };

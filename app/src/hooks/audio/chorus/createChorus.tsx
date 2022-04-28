@@ -1,5 +1,5 @@
 import { store } from "@/store/store";
-import { createEffect, createMemo, onMount } from "solid-js";
+import { Accessor, createEffect, createMemo, onMount } from "solid-js";
 
 const hanningWindow = (length: number) => {
     const window = new Float32Array(length);
@@ -14,42 +14,29 @@ const linearInterpolation = (a: number, b: number, t: number) =>
 const grainSize = 1024;
 
 // Credit: https://github.com/urtzurd/html-audio/blob/gh-pages/static/js/pitch-shifter.js
-function createChorus({ masterNode }: { masterNode: AudioNode }) {
+function createChorus() {
     const audioContext = createMemo(() => store().audio!.context);
-    const microphone = createMemo(() => store().audio!.microphone);
 
     const chorus = createMemo(() => store().Chorus.value);
 
-    const chorusNode = microphone().context.createScriptProcessor(
-        grainSize,
-        1,
-        1
+    const chorusNode = createMemo(() =>
+        audioContext().createScriptProcessor(grainSize, 1, 1)
     );
 
     createEffect(() => {
         if (!chorus()) {
-            chorusNode.disconnect();
-            return;
-        }
-        microphone().connect(masterNode);
-        masterNode.connect(chorusNode);
-        chorusNode.connect(audioContext().destination);
-    });
-
-    createEffect(() => {
-        if (!chorus()) {
-            chorusNode.onaudioprocess = null;
+            chorusNode().onaudioprocess = null;
             return;
         }
 
         const buffer = new Float32Array(grainSize * 2);
         const grainWindow = hanningWindow(grainSize);
 
-        const pitchRatio = 8;
-        const overlapRatio = 2;
+        const pitchRatio = 1;
+        const overlapRatio = 0.5;
 
-        if (!chorusNode.onaudioprocess)
-            chorusNode.onaudioprocess = (event) => {
+        if (!chorusNode().onaudioprocess)
+            chorusNode().onaudioprocess = (event) => {
                 let inputData = event.inputBuffer.getChannelData(0);
                 let outputData = event.outputBuffer.getChannelData(0);
 
@@ -88,11 +75,7 @@ function createChorus({ masterNode }: { masterNode: AudioNode }) {
                         grainWindow[i];
                 }
 
-                outputData.set(
-                    inputData.map(
-                        (sample) => sample * (store().Gain.value / 7 || 1)
-                    )
-                );
+                outputData.set(inputData.map((sample) => sample * 3));
             };
     });
     return { chorusNode };

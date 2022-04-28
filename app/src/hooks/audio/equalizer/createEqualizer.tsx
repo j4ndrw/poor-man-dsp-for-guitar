@@ -1,68 +1,56 @@
 import { store } from "@/store/store";
-import { createEffect, createMemo, onMount } from "solid-js";
+import { Accessor, createEffect, createMemo, onMount } from "solid-js";
 
 // Credit:
 //      https://stackoverflow.com/questions/30065093/web-audio-api-equalizer
 //      https://stackoverflow.com/questions/29110380/web-audio-api-setting-treble-and-bass
 //      https://github.com/cwilso/wubwubwub/blob/MixTrack/js/tracks.js#L189-L207
 
-function createEqualizer({
-    masterNode,
-    otherNodes,
-}: {
-    masterNode: AudioNode;
-    otherNodes: AudioNode[];
-}) {
+function createEqualizer() {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
-    const filterGain = audioContext().createBiquadFilter();
-    const lowsFilter = audioContext().createBiquadFilter();
-    const midsFilter = audioContext().createBiquadFilter();
-    const highsFilter = audioContext().createBiquadFilter();
+    const equalizerNode = createMemo(() => audioContext().createGain());
+    const lowsFilter = createMemo(() => audioContext().createBiquadFilter());
+    const midsFilter = createMemo(() => audioContext().createBiquadFilter());
+    const highsFilter = createMemo(() => audioContext().createBiquadFilter());
 
     onMount(() => {
-        // Connect microphone to the filters
-        microphone().connect(lowsFilter);
-        microphone().connect(midsFilter);
-        microphone().connect(highsFilter);
-        microphone().connect(filterGain);
-
-        // Connect the master node and the other nodes to the filters
-        [masterNode, ...otherNodes].forEach((node) => {
-            node.connect(lowsFilter);
-            node.connect(midsFilter);
-            node.connect(highsFilter);
-        });
-
-        // Connect the filters to main audio context
-        lowsFilter.connect(audioContext().destination);
-        midsFilter.connect(audioContext().destination);
-        highsFilter.connect(audioContext().destination);
-
-        // Chain the filters:
-        highsFilter.connect(midsFilter);
-        midsFilter.connect(lowsFilter);
-        lowsFilter.connect(filterGain);
+        equalizerNode().connect(lowsFilter());
+        equalizerNode().connect(midsFilter());
+        equalizerNode().connect(highsFilter());
     });
 
     createEffect(() => {
-        lowsFilter.type = "lowshelf";
-        midsFilter.type = "peaking";
-        highsFilter.type = "highshelf";
+        lowsFilter().type = "lowshelf";
+        midsFilter().type = "peaking";
+        highsFilter().type = "highshelf";
 
-        lowsFilter.frequency.value = 320.0 + store().Low.value;
-        midsFilter.frequency.value = 1000.0 + store().Mid.value;
-        highsFilter.frequency.value = 3200.0 + store().High.value;
+        lowsFilter().frequency.value = 200 * (store().Low.value / 100);
+        midsFilter().frequency.value = 2200 * (store().Mid.value / 100);
+        highsFilter().frequency.value = 4000 * (store().High.value / 100);
 
-        midsFilter.Q.value = 0.5;
+        midsFilter().Q.value = Math.SQRT1_2;
 
-        lowsFilter.gain.value = store().Low.value - 50;
-        midsFilter.gain.value = store().Mid.value - 50;
-        highsFilter.gain.value = store().High.value - 50;
+        lowsFilter().gain.setTargetAtTime(
+            store().Low.value / 10,
+            microphone().context.currentTime,
+            0.01
+        );
+        midsFilter().gain.setTargetAtTime(
+            store().Mid.value / 10,
+            microphone().context.currentTime,
+            0.01
+        );
+        highsFilter().gain.setTargetAtTime(
+            store().High.value / 10,
+            microphone().context.currentTime,
+            0.01
+        );
 
-        filterGain.gain.value = 0.5;
+        equalizerNode().gain.value = 0.5;
     });
+    return { equalizerNode };
 }
 
 export default createEqualizer;

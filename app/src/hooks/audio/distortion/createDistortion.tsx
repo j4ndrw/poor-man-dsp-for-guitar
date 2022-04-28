@@ -16,52 +16,42 @@ const makeDistortionCurve = (amount: number) => {
     return curve;
 };
 
-function createDistortion({ masterNode }: { masterNode: AudioNode }) {
+function createDistortion() {
     const audioContext = createMemo(() => store().audio!.context);
     const microphone = createMemo(() => store().audio!.microphone);
 
-    const distortionGainNode = audioContext().createGain();
-    const distortionWaveShaperNode = audioContext().createWaveShaper();
+    const gainNode = createMemo(() => audioContext().createGain());
+    const waveShaperNode = createMemo(() => audioContext().createWaveShaper());
 
     const shouldDistort = createMemo(() => store().Distortion.value);
 
     createEffect(() => {
         if (!shouldDistort()) {
-            distortionGainNode.disconnect();
-            distortionWaveShaperNode.disconnect();
             microphone()
                 .mediaStream.getAudioTracks()[0]
                 .getConstraints().noiseSuppression = false;
             return;
         }
 
-        // Connect microphone to master node
-        microphone().connect(masterNode);
-
-        // Connect master node to distortion gain node
-        masterNode.connect(distortionGainNode);
-
-        // Connect distortion gain node to distortion wave shaper node
-        distortionGainNode.connect(distortionWaveShaperNode);
-
-        // Connect distortion wave shaper node to audio context
-        distortionWaveShaperNode.connect(audioContext().destination);
-
         // Add noise gate
         microphone()
             .mediaStream.getAudioTracks()[0]
             .getConstraints().noiseSuppression = true;
+
+        gainNode().connect(waveShaperNode());
     });
 
     createEffect(() => {
         if (!shouldDistort()) {
-            distortionWaveShaperNode.curve = null;
+            waveShaperNode().curve = null;
+            gainNode().gain.value = 0;
             return;
         }
-        distortionWaveShaperNode.curve = makeDistortionCurve(25);
+        gainNode().gain.value = 10;
+        waveShaperNode().curve = makeDistortionCurve(500);
     });
 
-    return { distortionWaveShaperNode, distortionGainNode };
+    return { distortionNode: gainNode };
 }
 
 export default createDistortion;
