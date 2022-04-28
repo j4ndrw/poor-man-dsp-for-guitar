@@ -17,14 +17,14 @@ const grainSize = 1024;
 function createChorus() {
     const audioContext = createMemo(() => store().audio!.context);
 
-    const chorus = createMemo(() => store().Chorus.value);
+    const shouldUseChorus = createMemo(() => store().Chorus.value);
 
     const chorusNode = createMemo(() =>
         audioContext().createScriptProcessor(grainSize, 1, 1)
     );
 
     createEffect(() => {
-        if (!chorus()) {
+        if (!shouldUseChorus()) {
             chorusNode().onaudioprocess = null;
             return;
         }

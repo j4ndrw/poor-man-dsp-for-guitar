@@ -18,7 +18,7 @@ function MicrophonePlayback() {
     const { gainNode } = createGain();
     const { chorusNode } = createChorus();
     const { distortionNode } = createDistortion();
-    // createReverb();
+    const { reverbNode } = createReverb();
 
     const { equalizerNode } = createEqualizer();
 
@@ -57,15 +57,23 @@ function MicrophonePlayback() {
         // Connect the master node to all the effects
         connectNodes({
             from: masterNode(),
-            to: [gainNode(), chorusNode(), distortionNode(), equalizerNode()],
+            to: [
+                gainNode(),
+                chorusNode(),
+                distortionNode(),
+                reverbNode(),
+                equalizerNode(),
+            ],
         });
 
         // Connect the gain node to the other effects
         connectNodes({
             from: gainNode(),
-            to: [chorusNode(), distortionNode(), equalizerNode()],
+            to: [chorusNode(), distortionNode(), reverbNode(), equalizerNode()],
         });
     });
+
+    createEffect(() => []);
 
     createEffect(() => {
         // Credit: https://github.com/agiratech/picth-liveinput/blob/master/lib/pitchdetect.js
