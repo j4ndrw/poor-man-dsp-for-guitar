@@ -5,6 +5,7 @@ import createEqualizer from "@/hooks/audio/equalizer/createEqualizer";
 import { createEffect, createMemo, createSignal, onMount } from "solid-js";
 import { initialStoreState, setStore, store } from "@/store/store";
 import createReverb from "@/hooks/audio/reverb/createReverb";
+import createDelay from "@/hooks/audio/delay/createDelay";
 
 function MicrophonePlayback() {
     let canvasRef: HTMLCanvasElement;
@@ -19,6 +20,7 @@ function MicrophonePlayback() {
     const { chorusNode } = createChorus();
     const { distortionNode } = createDistortion();
     const { reverbNode } = createReverb();
+    const { delayNode } = createDelay();
 
     const { equalizerNode } = createEqualizer();
 
@@ -62,6 +64,7 @@ function MicrophonePlayback() {
                 chorusNode(),
                 distortionNode(),
                 reverbNode(),
+                delayNode(),
                 equalizerNode(),
             ],
         });
@@ -69,7 +72,13 @@ function MicrophonePlayback() {
         // Connect the gain node to the other effects
         connectNodes({
             from: gainNode(),
-            to: [chorusNode(), distortionNode(), reverbNode(), equalizerNode()],
+            to: [
+                chorusNode(),
+                distortionNode(),
+                reverbNode(),
+                delayNode(),
+                equalizerNode(),
+            ],
         });
     });
 

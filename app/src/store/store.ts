@@ -1,4 +1,3 @@
-import { createStore } from "solid-js/store";
 import type { AmpSetting } from "@/types/AmpSettings";
 import { createSignal } from "solid-js";
 import { IAudioAPI } from "@/interfaces/IAudioAPI";
@@ -13,8 +12,8 @@ interface Store {
     Mid: AmpSetting<number>;
     High: AmpSetting<number>;
     Distortion: AmpSetting<number>;
+    Delay: AmpSetting<number>;
     Chorus: AmpSetting<boolean>;
-    Delay: AmpSetting<boolean>;
     Reverb: AmpSetting<boolean>;
 }
 
@@ -25,8 +24,8 @@ export const initialStoreState: Store = {
     Mid: { value: 50 },
     High: { value: 50 },
     Distortion: { value: 0 },
+    Delay: { value: 0 },
     Chorus: { value: false },
-    Delay: { value: false },
     Reverb: { value: false },
 };
 

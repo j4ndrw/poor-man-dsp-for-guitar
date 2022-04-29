@@ -49,8 +49,15 @@ export const createAmp = createMemo(
                         max={100}
                     />
                 ),
+                () => (
+                    <TurnableKnob
+                        disabled={disabled}
+                        name="Delay"
+                        min={0}
+                        max={100}
+                    />
+                ),
                 () => <ClickableKnob disabled={disabled} name="Chorus" />,
-                () => <ClickableKnob disabled={disabled} name="Delay" />,
                 () => <ClickableKnob disabled={disabled} name="Reverb" />,
             ]
 );
