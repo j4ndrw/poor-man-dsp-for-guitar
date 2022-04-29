@@ -6,7 +6,7 @@ import { createEffect, createMemo, onMount } from "solid-js";
 //      https://www.npmjs.com/package/@logue/reverb
 
 const options = {
-    noise: "brown", // Inpulse Response Noise algorithm (0: White noise, 1: Pink noise, 2: Brown noise)
+    noise: "pink", // Inpulse Response Noise algorithm (0: White noise, 1: Pink noise, 2: Brown noise)
     decay: 5, // Amount of IR (Inpulse Response) decay. 0~100
     delay: 0, // Delay time o IR. (NOT delay effect) 0~100 [sec]
     filterFreq: 2200, // Filter frequency. 20~5000 [Hz]
@@ -134,8 +134,12 @@ function createReverb() {
 
         dryGainNode().gain.value = (1 - options.mix) / 2;
         wetGainNode().gain.value = options.mix / 2;
+    });
 
-        reverbNode().gain.value = 1;
+    createEffect(() => {
+        if (!shouldReverb()) return;
+        reverbNode().gain.value =
+            1 + store().Distortion.value / 100 + store().Gain.value / 100;
     });
 
     return { reverbNode };
