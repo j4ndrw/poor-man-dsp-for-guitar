@@ -16,7 +16,7 @@ function Status() {
                                 .enabled;
                     }}
                 >
-                    Mute Microphone
+                    Mute / Unmute Microphone
                 </button>
                 <button
                     class="bg-neutral-800 hover:bg-neutral-700 text-gray-200 font-bold py-2 px-4 inline-flex items-center rounded-2xl"

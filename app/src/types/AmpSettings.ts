@@ -3,10 +3,10 @@ export const effectNames = [
     "Low",
     "Mid",
     "High",
-    "Chorus",
-    "Delay",
-    "Reverb",
     "Distortion",
+    "Delay",
+    "Chorus",
+    "Reverb",
 ] as const;
 export type EffectName = typeof effectNames[number];
 

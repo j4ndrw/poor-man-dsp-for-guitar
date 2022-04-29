@@ -14,7 +14,9 @@ function createDelay() {
 
     const shouldDelay = createMemo(() => store().Delay.value);
 
-    const wet = 1;
+    const wet = createMemo(
+        () => 1 + store().Gain.value / 100 + store().Distortion.value / 100
+    );
     const speed = createMemo(() => store().Delay.value / 100);
     const duration = 0.4;
 
@@ -37,8 +39,8 @@ function createDelay() {
             return;
         }
 
-        delayGainNode().gain.value = wet;
-        wetGainNode().gain.value = wet;
+        delayGainNode().gain.value = wet();
+        wetGainNode().gain.value = wet();
         delayNode().delayTime.value = speed();
         durationGainNode().gain.value = duration;
     });
